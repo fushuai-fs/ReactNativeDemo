@@ -43,7 +43,7 @@ export default class App extends Component<{}> {
           Welcome to React Native!
         </Text>
         <Text style={styles.instructions} onPress={()=>this.checkVersion()}>
-          傻 啊
+          点击我呀
         </Text>
         <Text style={styles.instructions}>
           {instructions}
