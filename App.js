@@ -42,22 +42,32 @@ export default class App extends Component<{}> {
         <Text style={styles.welcome}>
           Welcome to React Native!
         </Text>
-        <Text style={styles.instructions} onPress={()=>this.checkVersion()}>
-          点击我呀
+        <Text style={styles.instructions} onPress={()=>this.ToastExample()}>
+          点击ToastExample
         </Text>
-        <Text style={styles.instructions}>
-          {instructions}
+        <Text style={styles.instructions} onPress={()=>this.checkVersion()}>
+          upgrade
         </Text>
       </View>
     );
   }
 
-    checkVersion(){
-        // NativeModules.UpgradeModule.hello('http://192.168.1.6/app-debug.apk');
-        alert(JSON.stringify(NativeModules));
-
+    ToastExample(){
         NativeModules.ToastExample.show('123456789',1);
 
+    }
+
+    checkVersion(){
+          // NativeModules.UpgradeModule.hello('http://192.168.1.6/app-debug.apk');
+       // NativeModules.UpgradeModule.upgrade('http://192.168.1.6/app-debug.apk');
+            NativeModules.UpgradeModule.checkVersion("",(errorCallback)=>{
+                alert(errorCallback)
+            } ,(isUpgrade,apkUri)=>{
+                alert(isUpgrade+'\r\n'+apkUri);
+                if(isUpgrade){
+                    NativeModules.UpgradeModule.upgrade(apkUri);
+                }
+            });
     }
 }
 
