@@ -24,16 +24,16 @@ export default class NetWorkStatus extends  Component<{}>  {
         };
     }
     componentDidMount() {
-        alert('componentDidMount');
+        // alert('componentDidMount');
 
-        // NetInfo.isConnected.addEventListener(
-        //     'change',
-        //     this._handleConnectivityChange
-        // );
-        // //检测网络是否连接
-        // NetInfo.isConnected.fetch().done(
-        //     (isConnected) => { this.setState({isConnected}); }
-        // );
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        //检测网络是否连接
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({isConnected}); }
+        );
         //检测网络连接信息
         NetInfo.fetch().done(
             (connectionInfo) => { this.setState({connectionInfo}); }
@@ -41,10 +41,10 @@ export default class NetWorkStatus extends  Component<{}>  {
     }
     componentWillUnmount() {
         alert('componentWillUnmount');
-        // NetInfo.isConnected.removeEventListener(
-        //     'change',
-        //     this._handleConnectivityChange
-        // );
+        NetInfo.isConnected.removeEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
     }
     _handleConnectivityChange(isConnected) {
         ToastAndroid.show((isConnected ? 'online' : 'offline'),ToastAndroid.SHORT);
