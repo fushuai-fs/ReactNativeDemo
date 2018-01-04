@@ -3,3 +3,4 @@
 
 参照：
 songxiaoliang https://github.com/songxiaoliang/react-native-app-upgrade
+test
