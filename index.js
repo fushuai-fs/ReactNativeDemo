@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { Component } from 'react';
 import { AppRegistry ,BackHandler } from 'react-native';
 import { addNavigationHelpers, NavigationActions,TabNavigator } from "react-navigation";
 
