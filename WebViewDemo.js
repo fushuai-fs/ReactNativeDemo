@@ -50,6 +50,7 @@ export default class WebViewDemo extends  Component<{}>  {
 
                 >
                 </WebView>
+                {/*<Text>{this.props.navigation.state.params.token }</Text>*/}
             </View>
         );
     }

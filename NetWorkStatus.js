@@ -70,6 +70,7 @@ export default class NetWorkStatus extends  Component<{}>  {
                 <Text style={styles.welcome}>
                     {NetInfo.isConnectionExpensive === true ? '需要计费' : '不要'}
                 </Text>
+                {/*<Text>{this.props.navigation.state.params.token }</Text>*/}
             </View>
         );
     }

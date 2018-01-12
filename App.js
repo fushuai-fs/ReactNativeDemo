@@ -37,6 +37,8 @@ export default class App extends Component<{}> {
     }
 
   render() {
+        const param = this.props.navigation.state;
+      // const token =   this.props.navigation.state.params.token;
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -48,6 +50,8 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions} onPress={()=>this.checkVersion()}>
           upgrade
         </Text>
+          <Text>{JSON.stringify(param) }</Text>
+          <Text>{global.SupplierCode }</Text>
       </View>
     );
   }
