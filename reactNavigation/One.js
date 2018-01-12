@@ -6,11 +6,15 @@ import {
     View,
     NativeModules,
     Button,
-
+    Dimensions
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
 import GlobalProps from '../GlobalProps.json'
+
+ // import Search from 'react-native-search-box'
+import Search from '../Search'
+const { width } = Dimensions.get('window');
 
 export default class One extends Component<{}> {
     constructor (props) {
@@ -31,6 +35,8 @@ export default class One extends Component<{}> {
        // alert(text);
         return (
             <View style={styles.container}>
+                <Search
+                    ref="search_box" cancelTitle={'取消'} contentWidth={width} onSearch={()=>this.onSearchOne()}/>
                 <Text>Welcome to React Native! One</Text>
 
                 <Button title='Go to Two' onPress={()=>this.btnclick()}/>
@@ -40,7 +46,17 @@ export default class One extends Component<{}> {
             </View>
         );
     }
-
+    onSearchOne = async () => {
+        alert('OneSearch');
+        this.props.beforeSearch &&
+        (await this.props.beforeSearch(this.state.keyword));
+        if (this.props.keyboardShouldPersist === false) {
+            await Keyboard.dismiss();
+        }
+        this.props.onSearch && (await this.props.onSearch(this.state.keyword));
+        this.props.afterSearch &&
+        (await this.props.afterSearch(this.state.keyword));
+    };
     btnclick(){
         global.SupplierCode='63967667';
         this.props.navigation.navigate("Two",{ token: 'abcd' });
