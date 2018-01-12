@@ -70,6 +70,7 @@ export default class One extends Component<{}> {
                 //         ]
                 //     })
                 // );
+                // 注意： 如果route在tabNavigator里就接收不到params参数了
                 navi.dispatch( NavigationActions.reset({
                     index: 0,
                     actions: [
