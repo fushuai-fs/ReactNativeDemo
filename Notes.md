@@ -13,7 +13,7 @@ git rm -r --cached xxx.json
                     ]
                 })
 
-    TextInput                 
+    TextInput    2018-01-13             
 onSubmitEditing  function 此回调函数当软键盘的 ``确定``/``提交`` 按钮被按下的时候调用此函数。如果``multiline={true}``，此属性不可用。
 
 autoCorrect bool 
@@ -72,7 +72,8 @@ secureTextEntry bool
  numeric
  email-address
  phone-pad
- 
+        
+        2018-01-13 end
  
  
  
