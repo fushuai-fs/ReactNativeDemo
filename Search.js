@@ -403,9 +403,9 @@ const getStyles = (inputHeight) => {
         },
         input: {
             height: containerHeight - 10,
-            paddingTop: 5,
-            paddingBottom: 5,
-            paddingRight: 20,
+            paddingTop: 4,
+            paddingBottom: 4,
+            paddingRight: 15,
             borderColor: '#444',
             backgroundColor: '#f7f7f7',
             borderRadius: 5,

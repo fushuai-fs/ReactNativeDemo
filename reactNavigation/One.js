@@ -3,17 +3,21 @@ import {
     Platform,
     StyleSheet,
     Text,
+    Animated,TextInput,TouchableWithoutFeedback,
     View,
     NativeModules,
     Button,
-    Dimensions
+    Dimensions,
+    TouchableOpacity
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 import GlobalProps from '../GlobalProps.json'
 
  // import Search from 'react-native-search-box'
 import Search from '../Search'
+import InputComponent from '../Components/InputComponent'
 const { width } = Dimensions.get('window');
 
 export default class One extends Component<{}> {
@@ -30,11 +34,25 @@ export default class One extends Component<{}> {
     componentDidMount() {
     }
 
+    onFocus = async () => {
+        alert(this.refs.input_keyword._component.isFocused);
+        this.props.beforeFocus && (await this.props.beforeFocus());
+        this.refs.input_keyword._component.isFocused &&
+        (await this.refs.input_keyword._component.focus());
+        await this.setState(prevState => {
+            return { expanded: !prevState.expanded };
+        });
+        // await this.expandAnimation();
+        this.props.onFocus && (await this.props.onFocus(this.state.keyword));
+        this.props.afterFocus && (await this.props.afterFocus());
+    };
     render() {
+
         const  text = this.state.text +1;
        // alert(text);
         return (
             <View style={styles.container}>
+                <InputComponent ref={'test'}/>
                 <Search
                     ref="search_box" cancelTitle={'取消'} contentWidth={width} onSearch={()=>this.onSearchOne()}/>
                 <Text>Welcome to React Native! One</Text>
@@ -43,6 +61,34 @@ export default class One extends Component<{}> {
                 <Button title='Go to Two not back' onPress={()=>this.btnclicknotback()}/>
 
                 <Text>{global.SupplierCode }</Text>
+
+                <TextInput ref={'input_keyword'} style={{width:width-20}}>
+                    <TouchableWithoutFeedback onPress={this.onFocus}>
+                        {this.props.iconSearch
+                            ? <Animated.View
+                                style={[styles.iconSearch, { left: this.iconSearchAnimated }]}
+                            >
+                                {this.props.iconSearch}
+                            </Animated.View>
+                            : <Animated.Image
+                                source={require('../img/search.png')}
+                                style={[
+                                    styles.iconSearch,
+                                    styles.iconSearchDefault,
+                                    this.props.tintColorSearch && {
+                                        tintColor: this.props.tintColorSearch
+                                    },
+                                    {
+                                        left: this.iconSearchAnimated
+                                    }
+                                ]}
+                            />}
+                    </TouchableWithoutFeedback>
+                </TextInput>
+
+
+
+
             </View>
         );
     }
@@ -106,11 +152,55 @@ export default class One extends Component<{}> {
 }
 
 const styles = StyleSheet.create({
-    container: {
+
+container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
+
+    input: {
+        height: 30,
+        paddingTop: 4,
+        paddingBottom: 4,
+        paddingRight: 15,
+        borderColor: '#444',
+        backgroundColor: '#f7f7f7',
+        borderRadius: 5,
+        fontSize: 13
+    },
+    // placeholderColor:{  'grey' },
+    iconSearch: {
+        flex: 1,
+        position: 'absolute',
+        top: 14,
+        height: 14,
+        width: 14
+    },
+    iconSearchDefault: {
+        tintColor: 'grey'
+    },
+    iconDelete: {
+        position: 'absolute',
+        right: 70,
+        top: 14,
+        height: 14,
+        width: 14
+    },
+    iconDeleteDefault: {
+        tintColor: 'grey'
+    },
+    cancelButton: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        backgroundColor: 'transparent',
+        width: 60,
+        height: 50
+    },
+    cancelButtonText: {
+        fontSize: 14,
+        color: '#fff'
+    }
 
 });
