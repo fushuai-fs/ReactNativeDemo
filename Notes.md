@@ -65,6 +65,13 @@ secureTextEntry bool
  selection {start: number, end: number} 
  设置选中文字的范围（指定首尾的索引值）。如果首尾为同一索引位置，则相当于指定光标的位置。
  
+ keyboardType enum("default", 'numeric', 'email-address', "ascii-capable", 'numbers-and-punctuation', 'url', 'number-pad', 'phone-pad', 'name-phone-pad', 'decimal-pad', 'twitter', 'web-search')        
+ 决定弹出的何种软键盘的，譬如``numeric``（纯数字键盘）。      
+ 这些值在所有平台都可用： 
+ default
+ numeric
+ email-address
+ phone-pad
  
  
  

@@ -18,6 +18,7 @@ import GlobalProps from '../GlobalProps.json'
  // import Search from 'react-native-search-box'
 import Search from '../Search'
 import InputComponent from '../Components/InputComponent'
+import  AppExample from '../AnimatedExample'
 const { width } = Dimensions.get('window');
 
 export default class One extends Component<{}> {
@@ -53,6 +54,8 @@ export default class One extends Component<{}> {
         return (
             <View style={styles.container}>
                 <InputComponent ref={'test'}/>
+                <AppExample/>
+
                 <Search
                     ref="search_box" cancelTitle={'取消'} contentWidth={width} onSearch={()=>this.onSearchOne()}/>
                 <Text>Welcome to React Native! One</Text>
