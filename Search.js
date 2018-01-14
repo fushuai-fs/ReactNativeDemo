@@ -260,6 +260,8 @@ class Search extends PureComponent {
                     styles.container,
                     this.props.backgroundColor && {
                         backgroundColor: this.props.backgroundColor
+                    },this.props.inputBorderRadius && {
+                        borderRadius: this.props.inputBorderRadius
                     }
                 ]}
                 // onLayout={this.onLayout}
@@ -399,7 +401,8 @@ const getStyles = (inputHeight) => {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            padding: 5
+            padding: 5,
+            borderRadius: 5,
         },
         input: {
             height: containerHeight - 10,

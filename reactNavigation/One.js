@@ -54,10 +54,10 @@ export default class One extends Component<{}> {
         return (
             <View style={styles.container}>
                 <InputComponent ref={'test'}/>
-                <AppExample/>
+                {/*<AppExample/>*/}
 
                 <Search
-                    ref="search_box" cancelTitle={'取消'} contentWidth={width} onSearch={()=>this.onSearchOne()}/>
+                    ref="search_box" cancelTitle={'取消'} contentWidth={width-20} onSearch={()=>this.onSearchOne()}/>
                 <Text>Welcome to React Native! One</Text>
 
                 <Button title='Go to Two' onPress={()=>this.btnclick()}/>

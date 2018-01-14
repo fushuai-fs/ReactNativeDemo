@@ -28,6 +28,11 @@ export default class InputComponent extends PureComponent {
         this.contentWidth = width;
         this.middleWidth = width / 2;
         this.cancelButtonWidth = this.props.cancelButtonWidth || 70;
+        this.inputFocusWidthAnimated = new Animated.Value(this.contentWidth - 10);
+        this.inputFocusPlaceholderAnimated = new Animated.Value(
+            this.middleWidth - this.props.placeholderCollapsedMargin
+        );
+        this.shadowHeight = this.props.shadowOffsetHeightCollapsed;
 
     }
 
@@ -40,11 +45,35 @@ export default class InputComponent extends PureComponent {
         return (
             <Animated.View ref="inputContainer"
                 style={[ styles.container,
-                     this.props.backgroundColor && {backgroundColor: this.props.backgroundColor}
+                     this.props.backgroundColor && {backgroundColor: this.props.backgroundColor},
+                    this.props.inputBorderRadius && {
+                        borderRadius: this.props.inputBorderRadius
+                    }
                 ]}
             >
                 <AnimatedTextInput ref="input_keyword" style={[
                     styles.input,
+                    this.props.placeholderTextColor && {
+                        color: this.props.placeholderTextColor
+                    },
+                    this.props.inputStyle && this.props.inputStyle,
+                    this.props.inputHeight && { height: this.props.inputHeight },
+                    this.props.inputBorderRadius && {
+                        borderRadius: this.props.inputBorderRadius
+                    },
+                    {
+                        width: this.inputFocusWidthAnimated,
+                        paddingLeft: this.inputFocusPlaceholderAnimated
+                    },
+                    this.props.shadowVisible && {
+                        shadowOffset: {
+                            width: this.props.shadowOffsetWidth,
+                            height: this.shadowHeight
+                        },
+                        shadowColor: this.props.shadowColor,
+                        shadowOpacity: this.shadowOpacityAnimated,
+                        shadowRadius: this.props.shadowRadius
+                    }
                 ]}
 
                                    value={this.state.keyword}
@@ -83,7 +112,9 @@ const getStyles = (inputHeight) => {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            padding: 0,margin:0
+            padding: 0,
+            margin:0,
+            borderRadius: 5,
         },
         input: {
             height: containerHeight ,
@@ -93,16 +124,52 @@ const getStyles = (inputHeight) => {
             borderColor: '#444',
             backgroundColor: '#f7f7f7',
             borderRadius: 5,
-            fontSize: 24
+            fontSize: 18
         },
     };
 
 }
 InputComponent.propTypes={
-    // 组件的高
-    inputHeight: PropTypes.number,
+    /**
+     * styles
+     */
     // 组件的背景颜色
     backgroundColor: PropTypes.string,
+    placeholderTextColor: PropTypes.string,
+    inputStyle: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.object,
+        ViewPropTypes.style,
+        Text.propTypes.style
+    ]),
+
+    // 组件的高
+    inputHeight: PropTypes.number,
     placeholder:PropTypes.string,
+    returnKeyType: PropTypes.string,
+    keyboardType: PropTypes.string,
+    autoCapitalize: PropTypes.string,
+    inputBorderRadius: PropTypes.number,
+    contentWidth: PropTypes.number,
+    middleWidth: PropTypes.number,
+    editable: PropTypes.bool,
+    blurOnSubmit: PropTypes.bool,
+    keyboardShouldPersist: PropTypes.bool,
+    useClearButton: PropTypes.bool,
+
+    shadowOffsetHeightCollapsed: PropTypes.number,
+
+    /**
+     * onChangeText
+     * return a Promise
+     */
+    onChangeText: PropTypes.func,
 }
 
+InputComponent.defaultProps = {
+    editable: true,
+    blurOnSubmit: true,
+    keyboardShouldPersist: false,
+    shadowOffsetHeightCollapsed: 2,
+    useClearButton: true,
+};
