@@ -19,20 +19,35 @@ import GlobalProps from '../GlobalProps.json'
 import Search from '../Search'
 import InputComponent from '../Components/InputComponent'
 import  AppExample from '../AnimatedExample'
+
+import Json from '../Utility/JsonUtility'
+import Storage from '../Utility/StorageUtility'
+
 const { width } = Dimensions.get('window');
 
 export default class One extends Component<{}> {
     constructor (props) {
         super (props)
         this.state = {
-             text:1
+             text:1,jsonstr:''
         }
     }
     // render() 方法前运行
     componentWillMount(){
+        const jsonstr='{"msg":"msg0","result":1}';
+        const jsonData=Json.strToJson(jsonstr);
+        Storage.save('json',jsonData,()=>{})
 
+        Storage.get('json',(err,json)=>{
+            this.setState({ jsonstr:Json.jsonToStr(json) });
+        });
     }
+
     componentDidMount() {
+        // const jsons = Storage.get('json');
+        // // alert(Json.jsonToStr(jsons));
+        // this.setState({ jsonstr:Json.jsonToStr(jsons) });
+
     }
 
     onFocus = async () => {
@@ -48,11 +63,18 @@ export default class One extends Component<{}> {
         this.props.afterFocus && (await this.props.afterFocus());
     };
     render() {
-
         const  text = this.state.text +1;
-       // alert(text);
+        // const jsonstr='{"msg":"msg0","result":1}';
+        // const jsonData=Json.strToJson(jsonstr);
+       // alert(jsons);
         return (
             <View style={styles.container}>
+                {/*<Text>{Json.jsonToStr(jsonData)}</Text>*/}
+                {/*<Text> {jsonData.result+1}</Text>*/}
+
+                <Text>{this.state.jsonstr}</Text>
+                <Text> </Text>
+
                 <InputComponent ref={'test'}/>
                 {/*<AppExample/>*/}
 
@@ -107,8 +129,12 @@ export default class One extends Component<{}> {
         (await this.props.afterSearch(this.state.keyword));
     };
     btnclick(){
-        global.SupplierCode='63967667';
-        this.props.navigation.navigate("Two",{ token: 'abcd' });
+        Storage.get('json',(err,json)=>{ alert(json);
+            this.setState({ jsonstr:Json.jsonToStr(json)+'123123' });
+        });
+
+        // global.SupplierCode='63967667';
+        // this.props.navigation.navigate("Two",{ token: 'abcd' });
     }
     btnclicknotback(){
         const  navi = this.props.navigation;

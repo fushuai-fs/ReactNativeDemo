@@ -82,3 +82,6 @@ secureTextEntry bool
  setImmediate / setTimeout（）：稍后运行代码，注意这可能会延迟动画。     
  runAfterInteractions（）：稍后运行代码，而不会延迟活动动画。       
  runAfterInteractions  安排一个函数在所有交互完成后运行。      
+ 
+ 
+ AsyncStorage 异步的、持久化的Key-Value存储系统
