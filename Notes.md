@@ -13,7 +13,8 @@ git rm -r --cached xxx.json
                     ]
                 })
 
-    TextInput    2018-01-13             
+    TextInput
+   ``2018-01-13       ``
 onSubmitEditing  function 此回调函数当软键盘的 ``确定``/``提交`` 按钮被按下的时候调用此函数。如果``multiline={true}``，此属性不可用。
 
 autoCorrect bool 
@@ -73,8 +74,11 @@ secureTextEntry bool
  email-address
  phone-pad
         
-        2018-01-13 end
+   ``2018-01-13 end``
  
- 
- 
- 
+ 2018.01.15
+ InteractionManager  允许在任何交互/动画完成后安排长时间运行的工作。特别是，这允许JavaScript动画顺利运行。       
+ requestAnimationFrame（）：用于动画化视图的代码。        
+ setImmediate / setTimeout（）：稍后运行代码，注意这可能会延迟动画。     
+ runAfterInteractions（）：稍后运行代码，而不会延迟活动动画。       
+ runAfterInteractions  安排一个函数在所有交互完成后运行。      
