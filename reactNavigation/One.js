@@ -14,7 +14,7 @@ import { NavigationActions } from 'react-navigation';
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 import GlobalProps from '../GlobalProps.json'
-
+import momnet from 'moment'
  // import Search from 'react-native-search-box'
 import Search from '../Search'
 import InputComponent from '../Components/InputComponent'
@@ -29,7 +29,11 @@ export default class One extends Component<{}> {
     constructor (props) {
         super (props)
         this.state = {
-             text:1,jsonstr:''
+             text:1,jsonstr:'',
+            longitude:0,
+            latitude:0,
+            error:'',
+            date:''
         }
     }
     // render() 方法前运行
@@ -41,15 +45,27 @@ export default class One extends Component<{}> {
         Storage.get('json',(err,json)=>{
             this.setState({ jsonstr:Json.jsonToStr(json) });
         });
+        this.timer = setInterval(()=>{
+            this.uploadPosition(this.state.longitude,this.state.latitude);
+        },1000);
+        this.timer2 = setInterval(()=>{
+            this.getPosition();
+        },10000);
     }
 
     componentDidMount() {
         // const jsons = Storage.get('json');
         // // alert(Json.jsonToStr(jsons));
         // this.setState({ jsonstr:Json.jsonToStr(jsons) });
-
+        // this.getPosition();
+       // this.timer = setInterval(()=>this.getPosition(),1000);
     }
-
+    componentWillUnmount() {
+        // 如果存在this.timer，则使用clearTimeout清空。
+        // 如果你使用多个timer，那么用多个变量，或者用个数组来保存引用，然后逐个clear
+        this.timer && clearTimeout(this.timer);
+        this.timer2 && clearTimeout(this.timer2);
+    }
     onFocus = async () => {
         alert(this.refs.input_keyword._component.isFocused);
         this.props.beforeFocus && (await this.props.beforeFocus());
@@ -72,44 +88,48 @@ export default class One extends Component<{}> {
                 {/*<Text>{Json.jsonToStr(jsonData)}</Text>*/}
                 {/*<Text> {jsonData.result+1}</Text>*/}
 
-                <Text>{this.state.jsonstr}</Text>
-                <Text> </Text>
+                {/*<Text>{this.state.jsonstr}</Text>*/}
+                <Text>longitude:{this.state.longitude}</Text>
+                <Text>latitude:{this.state.latitude}</Text>
+                <Text>error:{this.state.error}</Text>
+                <Text>datetime:{momnet(this.state.date).format('YYYY-MM-DD HH:mm:ss')}</Text>
+
 
                 <InputComponent ref={'test'}/>
                 {/*<AppExample/>*/}
 
-                <Search
-                    ref="search_box" cancelTitle={'取消'} contentWidth={width-20} onSearch={()=>this.onSearchOne()}/>
-                <Text>Welcome to React Native! One</Text>
+                {/*<Search*/}
+                    {/*ref="search_box" cancelTitle={'取消'} contentWidth={width-20} onSearch={()=>this.onSearchOne()}/>*/}
+                {/*<Text>Welcome to React Native! One</Text>*/}
 
-                <Button title='Go to Two' onPress={()=>this.btnclick()}/>
-                <Button title='Go to Two not back' onPress={()=>this.btnclicknotback()}/>
+                {/*<Button title='Go to Two' onPress={()=>this.btnclick()}/>*/}
+                {/*<Button title='Go to Two not back' onPress={()=>this.btnclicknotback()}/>*/}
 
-                <Text>{global.SupplierCode }</Text>
+                {/*<Text>{global.SupplierCode }</Text>*/}
 
-                <TextInput ref={'input_keyword'} style={{width:width-20}}>
-                    <TouchableWithoutFeedback onPress={this.onFocus}>
-                        {this.props.iconSearch
-                            ? <Animated.View
-                                style={[styles.iconSearch, { left: this.iconSearchAnimated }]}
-                            >
-                                {this.props.iconSearch}
-                            </Animated.View>
-                            : <Animated.Image
-                                source={require('../img/search.png')}
-                                style={[
-                                    styles.iconSearch,
-                                    styles.iconSearchDefault,
-                                    this.props.tintColorSearch && {
-                                        tintColor: this.props.tintColorSearch
-                                    },
-                                    {
-                                        left: this.iconSearchAnimated
-                                    }
-                                ]}
-                            />}
-                    </TouchableWithoutFeedback>
-                </TextInput>
+                {/*<TextInput ref={'input_keyword'} style={{width:width-20}}>*/}
+                    {/*<TouchableWithoutFeedback onPress={this.onFocus}>*/}
+                        {/*{this.props.iconSearch*/}
+                            {/*? <Animated.View*/}
+                                {/*style={[styles.iconSearch, { left: this.iconSearchAnimated }]}*/}
+                            {/*>*/}
+                                {/*{this.props.iconSearch}*/}
+                            {/*</Animated.View>*/}
+                            {/*: <Animated.Image*/}
+                                {/*source={require('../img/search.png')}*/}
+                                {/*style={[*/}
+                                    {/*styles.iconSearch,*/}
+                                    {/*styles.iconSearchDefault,*/}
+                                    {/*this.props.tintColorSearch && {*/}
+                                        {/*tintColor: this.props.tintColorSearch*/}
+                                    {/*},*/}
+                                    {/*{*/}
+                                        {/*left: this.iconSearchAnimated*/}
+                                    {/*}*/}
+                                {/*]}*/}
+                            {/*/>}*/}
+                    {/*</TouchableWithoutFeedback>*/}
+                {/*</TextInput>*/}
 
 
 
@@ -117,6 +137,72 @@ export default class One extends Component<{}> {
             </View>
         );
     }
+    /** 获取地理位置（经纬度） */
+    getPosition = (): void => {
+        this.setState(prevState => ({
+            error:'',
+            longitude:0,
+            latitude:0,
+            date: new Date()
+        }));
+        /** 获取地理位置 */
+        navigator.geolocation.getCurrentPosition(
+            (position: any) => {
+                // console.warn('成功：' + JSON.stringify(position));
+                const positionData: any = position.coords;
+                // 经度：positionData.longitude
+                // 纬度：positionData.latitude
+                // 最后一步 todo：高德 || 百度地图逆地理编码转~~具体就是调个接口把经纬度丢进去就行了
+// alert(positionData.longitude+'--'+positionData.latitude);
+                this.setState({
+                    longitude:positionData.longitude,
+                    latitude:positionData.latitude
+                });
+  // this.uploadPosition(positionData.longitude,positionData.latitude);
+
+            },
+            (error: any) => {
+               // alert('失败：' + JSON.stringify(error.message))
+                this.setState({
+                    error:'失败：' + JSON.stringify(error.message)
+                });
+            }, {
+                // 提高精确度，但是获取的速度会慢一点
+                enableHighAccuracy: false,
+                // 设置获取超时的时间20秒
+                timeout: 20000,
+                // 示应用程序的缓存时间，每次请求都是立即去获取一个全新的对象内容
+                maximumAge: 10000
+            }
+        );
+    }
+
+    /*
+      经度：longitude
+      纬度：latitude
+    * */
+    uploadPosition(longitude,latitude){
+        this.setState(prevState => ({
+            date: new Date()
+        }));
+        fetch(GlobalProps.UploadPosition, {
+            method: 'post',
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+            },
+            body: 'Method=Position&longitude='+longitude+'&latitude='+latitude+'&Mark=mar&date='+momnet(this.state.date).format('YYYY-MM-DD HH:mm:ss')
+        })
+            // .then((response)=>response.json())
+            .then((data)=>{
+            })
+            .catch(function (error) {
+                this.setState({
+                    error:'failed：' + error
+                });
+                //alert('Request failed\r\n'+ error);
+            });
+    }
+
     onSearchOne = async () => {
         alert('OneSearch');
         this.props.beforeSearch &&
