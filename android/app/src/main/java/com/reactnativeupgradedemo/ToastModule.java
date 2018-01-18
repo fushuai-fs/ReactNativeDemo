@@ -1,7 +1,11 @@
 package com.reactnativeupgradedemo;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -17,9 +21,10 @@ public class ToastModule extends ReactContextBaseJavaModule {
 
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
-
+    private Context context;
     public ToastModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.context=reactContext;
     }
 
     @Override
@@ -38,4 +43,22 @@ public class ToastModule extends ReactContextBaseJavaModule {
     public void show(String message, int duration) {
         Toast.makeText(getReactApplicationContext(), message, duration).show();
     }
+    @ReactMethod
+    public void startService(Callback errorCallback, Callback successCallback){
+        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+        try {
+            Activity currentActivity = getCurrentActivity();
+            if (null != currentActivity) {
+                Class toActivity = Class.forName("com.reactnativeupgradedemo.MyService");
+                Intent intent = new Intent(getReactApplicationContext(), toActivity);
+//            intent.putExtra("params", params);
+                context.startService(intent);
+                successCallback.invoke(MyService.str);
+            }
+        } catch (Exception ex){  errorCallback.invoke(ex.toString());}
+
+    }
+    @ReactMethod
+    public  void  getService(Callback successCallback){successCallback.invoke(MyService.str+MyService.i);}
+
 }

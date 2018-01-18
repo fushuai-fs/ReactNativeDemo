@@ -37,23 +37,38 @@ export default class One extends Component<{}> {
         }
     }
     // render() 方法前运行
-    componentWillMount(){
-        const jsonstr='{"msg":"msg0","result":1}';
-        const jsonData=Json.strToJson(jsonstr);
-        Storage.save('json',jsonData,()=>{})
+    componentWillMount() {
+        const jsonstr = '{"msg":"msg0","result":1}';
+        const jsonData = Json.strToJson(jsonstr);
+        Storage.save('json', jsonData, () => {
+        })
 
-        Storage.get('json',(err,json)=>{
-            this.setState({ jsonstr:Json.jsonToStr(json) });
+        Storage.get('json', (err, json) => {
+            this.setState({jsonstr: Json.jsonToStr(json)});
         });
-        this.timer = setInterval(()=>{
-            this.uploadPosition(this.state.longitude,this.state.latitude);
-        },1000);
-        this.timer2 = setInterval(()=>{
-            this.getPosition();
-        },10000);
+        this.timer = setInterval(() => {
+            this.uploadPosition(this.state.longitude, this.state.latitude);
+        }, 1000);
+
+        NativeModules.ToastExample.startService(
+            (error) => {
+                alert(error);
+            },//{this.setState({error:error});},
+            (success) => {
+                alert(success);
+            }//{this.setState({error:success});}
+        );
+
     }
 
+
     componentDidMount() {
+        this.timer2 = setInterval(() => {
+           // this.getPosition();
+            NativeModules.ToastExample.getService((text) => {
+            this.setState({error: text});
+        });
+    }, 10000);
         // const jsons = Storage.get('json');
         // // alert(Json.jsonToStr(jsons));
         // this.setState({ jsonstr:Json.jsonToStr(jsons) });
@@ -63,7 +78,7 @@ export default class One extends Component<{}> {
     componentWillUnmount() {
         // 如果存在this.timer，则使用clearTimeout清空。
         // 如果你使用多个timer，那么用多个变量，或者用个数组来保存引用，然后逐个clear
-        this.timer && clearTimeout(this.timer);
+        this.timer && clearTimeout(this.timer); // 如果不清除再次唤起页面会现2次执行
         this.timer2 && clearTimeout(this.timer2);
     }
     onFocus = async () => {
