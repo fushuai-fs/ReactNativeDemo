@@ -38,24 +38,24 @@ export default class One extends Component<{}> {
     }
     // render() 方法前运行
     componentWillMount() {
-        const jsonstr = '{"msg":"msg0","result":1}';
-        const jsonData = Json.strToJson(jsonstr);
-        Storage.save('json', jsonData, () => {
-        })
+        // const jsonstr = '{"msg":"msg0","result":1}';
+        // const jsonData = Json.strToJson(jsonstr);
+        // Storage.save('json', jsonData, () => {
+        // })
+        //
+        // Storage.get('json', (err, json) => {
+        //     this.setState({jsonstr: Json.jsonToStr(json)});
+        // });
+        // this.timer = setInterval(() => {
+        //     this.uploadPosition(this.state.longitude, this.state.latitude);
+        // }, 1000);
 
-        Storage.get('json', (err, json) => {
-            this.setState({jsonstr: Json.jsonToStr(json)});
-        });
-        this.timer = setInterval(() => {
-            this.uploadPosition(this.state.longitude, this.state.latitude);
-        }, 1000);
-
-        NativeModules.ToastExample.startService(
+        NativeModules.ToastExample.startService(GlobalProps.UploadPosition,
             (error) => {
-                alert(error);
+                // alert(error);
             },//{this.setState({error:error});},
             (success) => {
-                alert(success);
+                // alert(success);
             }//{this.setState({error:success});}
         );
 
@@ -67,6 +67,12 @@ export default class One extends Component<{}> {
            // this.getPosition();
             NativeModules.ToastExample.getService((text) => {
             this.setState({error: text});
+                this.setState(prevState => ({
+                    error:'',
+                    longitude:0,
+                    latitude:0,
+                    date: new Date()
+                }));
         });
     }, 10000);
         // const jsons = Storage.get('json');

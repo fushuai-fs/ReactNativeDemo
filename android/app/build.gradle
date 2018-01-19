@@ -144,11 +144,17 @@ android {
         }
     }
 }
-
+//dependencies ： 当前Android Module构建过程中所依赖的所有库
 dependencies {
+    //依赖指定目录下所有指定后缀的文件
     compile fileTree(dir: "libs", include: ["*.jar"])
+    //远程库的依赖 （当从远程库中下载一次过后，就会缓存到本地了）
+    //默认远程库配置为 jcenter()
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
+    //依赖指定文件（这里依赖的是jar包）
+    compile files('libs/fastjson-1.1.63.android.jar')
+
 }
 
 // Run this once to be able to run the application with BUCK
