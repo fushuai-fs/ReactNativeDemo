@@ -52,10 +52,10 @@ export default class One extends Component<{}> {
 
         NativeModules.ToastExample.startService(GlobalProps.UploadPosition,
             (error) => {
-                // alert(error);
+                  // alert(error);
             },//{this.setState({error:error});},
             (success) => {
-                // alert(success);
+                  alert(success);
             }//{this.setState({error:success});}
         );
 
@@ -63,6 +63,11 @@ export default class One extends Component<{}> {
 
 
     componentDidMount() {
+        this.timer = setInterval(() => {
+            this.setState(prevState => ({
+                date: new Date()
+            }));
+                                }, 1000);
         this.timer2 = setInterval(() => {
            // this.getPosition();
             NativeModules.ToastExample.getService((text) => {
@@ -116,14 +121,14 @@ export default class One extends Component<{}> {
                 <Text>datetime:{momnet(this.state.date).format('YYYY-MM-DD HH:mm:ss')}</Text>
 
 
-                <InputComponent ref={'test'}/>
+                {/*<InputComponent ref={'test'}/>*/}
                 {/*<AppExample/>*/}
 
                 {/*<Search*/}
                     {/*ref="search_box" cancelTitle={'取消'} contentWidth={width-20} onSearch={()=>this.onSearchOne()}/>*/}
                 {/*<Text>Welcome to React Native! One</Text>*/}
 
-                {/*<Button title='Go to Two' onPress={()=>this.btnclick()}/>*/}
+                <Button title='Go to Two' onPress={()=>this.btnclick()}/>
                 {/*<Button title='Go to Two not back' onPress={()=>this.btnclicknotback()}/>*/}
 
                 {/*<Text>{global.SupplierCode }</Text>*/}
@@ -236,12 +241,12 @@ export default class One extends Component<{}> {
         (await this.props.afterSearch(this.state.keyword));
     };
     btnclick(){
-        Storage.get('json',(err,json)=>{ alert(json);
-            this.setState({ jsonstr:Json.jsonToStr(json)+'123123' });
-        });
+        // Storage.get('json',(err,json)=>{ alert(json);
+        //     this.setState({ jsonstr:Json.jsonToStr(json)+'123123' });
+        // });
 
-        // global.SupplierCode='63967667';
-        // this.props.navigation.navigate("Two",{ token: 'abcd' });
+        global.SupplierCode='63967667';
+        this.props.navigation.navigate("Two",{ token: 'abcd' });
     }
     btnclicknotback(){
         const  navi = this.props.navigation;

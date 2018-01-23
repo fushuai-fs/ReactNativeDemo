@@ -1,19 +1,8 @@
 package com.reactnativeupgradedemo;
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
-
 import com.facebook.react.ReactActivity;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.modules.websocket.WebSocketModule;
-import com.facebook.react.shell.MainReactPackage;
 
 
-import java.util.Arrays;
-import java.util.List;
 public class MainActivity extends ReactActivity {
 
     /**

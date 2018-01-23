@@ -46,6 +46,7 @@ public class ToastModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void startService(String UploadUri,Callback errorCallback, Callback successCallback){
 //        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+        MyService.UploadUri=UploadUri;
         try {
             Activity currentActivity = getCurrentActivity();
             if (null != currentActivity) {
@@ -53,7 +54,6 @@ public class ToastModule extends ReactContextBaseJavaModule {
                 Intent intent = new Intent(getReactApplicationContext(), toActivity);
 //            intent.putExtra("params", params);
                 context.startService(intent);
-                MyService.UploadUri=UploadUri;
                 successCallback.invoke("success:"+MyService.str);
             }
         } catch (Exception ex){  errorCallback.invoke("error:"+ex.toString());}
