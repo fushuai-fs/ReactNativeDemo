@@ -39,16 +39,15 @@ public class MyService extends Service {
 //            i++;
 //        }
 //    };
-    public  static String UploadUri="";
-    public  static  int i=0;
+    public static  int i=0;
+    public  static String str="";
+    public  static String httpresult="";
     private IBinder binder=new MyService.LocalBinder();
 
     //定位都要通过LocationManager这个类实现
     private LocationManager locationManager;
     private String provider;
-    public  static String str="";
-    public  static String httpresult="";
-    public static RNDeviceModule device;
+    private String UploadUri="";
 //   private Thread thread = new Thread(new Runnable() {
 //        @Override
 //        public void run() {
@@ -83,10 +82,9 @@ public class MyService extends Service {
          Location location = locationManager.getLastKnownLocation(provider);
            if (location != null) {
                //获取当前位置，这里只用到了经纬度
-                 str += "纬度为：" + location.getLatitude() + ",经度为："
-                       + location.getLongitude();
+                 str += ",经度为："  + location.getLongitude()+ "纬度为：" + location.getLatitude() ;
 //               Toast.makeText(getApplicationContext(),str, Toast.LENGTH_LONG).show();
-               UploadLocation(String.valueOf(location.getLongitude()),String.valueOf(location.getLatitude()));
+//               UploadLocation(String.valueOf(location.getLongitude()),String.valueOf(location.getLatitude()));
            }
 
            //绑定定位事件，监听位置是否改变
@@ -97,7 +95,7 @@ public class MyService extends Service {
        }
        catch (Exception ex)
        {
-          str += ex.toString();
+          str += "Exception"+ ex.toString();
            // Toast.makeText(getApplicationContext(),ex.toString(), Toast.LENGTH_LONG).show();
        }
     }
@@ -132,6 +130,7 @@ public class MyService extends Service {
                     str += "纬度为：" + location.getLatitude() + ",经度为："
                             + location.getLongitude();
                     UploadLocation(String.valueOf(location.getLongitude()),String.valueOf(location.getLatitude()));
+//                    httpresult+=UploadUri;
                 }
             }catch (Exception ex){str+="update"+ex.toString();}
         }
@@ -140,26 +139,28 @@ public class MyService extends Service {
     public void UploadLocation(String Longitude,String Latitude)
     {
         DateFormat df = DateFormat.getDateTimeInstance();
-        httpresult+=df.format(new Date())+"------";
         FormBody formBody = new FormBody.Builder().add("DeviceID", "test")
                 .add("Longitude", Longitude)
                 .add("Latitude", Latitude)
                 .add("Mark", String.valueOf(i))
                 .add("date", df.format(new Date()))
                 .build();
+        try{
+            httpresult+=UploadUri;//"http://172.16.2.162/api/Position/Post"
+            OkHttpHelper.getInstance().asyncPost(UploadUri, formBody, new OkHttpHelper.HttpCallBack() {
+                @Override
+                public void onError(Request request, IOException e) {
+                    httpresult += e.toString();
+                }
 
-        OkHttpHelper.getInstance().asyncPost(UploadUri, formBody, new OkHttpHelper.HttpCallBack() {
-            @Override
-            public void onError(Request request, IOException e) {
-                httpresult += e.toString();
-            }
+                @Override
+                public void onSuccess(Request request, String result) {
+//                    httpresult+="Success";
+                }
+            });
+        }
+        catch (Exception e){httpresult+="异常"+e.toString();}
 
-            @Override
-            public void onSuccess(Request request, String result) {
-                httpresult+="Success";
-            }
-
-        });
     }
 
     @Override
@@ -176,6 +177,14 @@ public class MyService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        // 必须检查intent是否为空
+        // 因为 intent的参数是null的原因是这个intent参数是通过startService(Intent)方法所传递过来的，
+        // 但是如果Service在你的进程退出后有可能被系统自动重启，这个时候intent就会是null.
+        //  http://blog.csdn.net/luohai859/article/details/50685418
+        if(intent!=null) {
+            this.UploadUri = intent.getStringExtra("UploadUri");
+        }
+
 //        str+=thread.getState().toString();
 //        switch (thread.getState())
 //        {
@@ -201,11 +210,12 @@ public class MyService extends Service {
 
     @Override
     public void onDestroy() {
-        if (locationManager != null) {
-        locationManager.removeUpdates(locationListener);
-    }
         super.onDestroy();
 
+        if (locationManager != null) {
+            locationManager.removeUpdates(locationListener);
+        }
+       this.stopSelf();
     }
 
     //定义内容类继承Binder

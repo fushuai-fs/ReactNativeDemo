@@ -33,7 +33,8 @@ export default class One extends Component<{}> {
             longitude:0,
             latitude:0,
             error:'',
-            date:''
+            date:'',
+            uploadUri:''
         }
     }
     // render() 方法前运行
@@ -49,10 +50,10 @@ export default class One extends Component<{}> {
         // this.timer = setInterval(() => {
         //     this.uploadPosition(this.state.longitude, this.state.latitude);
         // }, 1000);
-
+// alert(GlobalProps.UploadPosition);
         NativeModules.ToastExample.startService(GlobalProps.UploadPosition,
             (error) => {
-                  // alert(error);
+                   alert("error:"+error);
             },//{this.setState({error:error});},
             (success) => {
                   alert(success);
@@ -71,15 +72,22 @@ export default class One extends Component<{}> {
         this.timer2 = setInterval(() => {
            // this.getPosition();
             NativeModules.ToastExample.getService((text) => {
-            this.setState({error: text});
                 this.setState(prevState => ({
-                    error:'',
+                    error:text,
                     longitude:0,
                     latitude:0,
                     date: new Date()
                 }));
         });
+
     }, 10000);
+        this.timer3 = setInterval(()=>{
+            NativeModules.ToastExample.getServiceUri((txt)=>{
+                this.setState(prevState => ({
+                    uploadUri:txt
+                }));
+            });
+        },5000);
         // const jsons = Storage.get('json');
         // // alert(Json.jsonToStr(jsons));
         // this.setState({ jsonstr:Json.jsonToStr(jsons) });
@@ -91,6 +99,7 @@ export default class One extends Component<{}> {
         // 如果你使用多个timer，那么用多个变量，或者用个数组来保存引用，然后逐个clear
         this.timer && clearTimeout(this.timer); // 如果不清除再次唤起页面会现2次执行
         this.timer2 && clearTimeout(this.timer2);
+        this.timer3 && clearTimeout(this.timer3);
     }
     onFocus = async () => {
         alert(this.refs.input_keyword._component.isFocused);
@@ -117,9 +126,9 @@ export default class One extends Component<{}> {
                 {/*<Text>{this.state.jsonstr}</Text>*/}
                 <Text>longitude:{this.state.longitude}</Text>
                 <Text>latitude:{this.state.latitude}</Text>
-                <Text>error:{this.state.error}</Text>
+                <Text>{this.state.error}</Text>
                 <Text>datetime:{momnet(this.state.date).format('YYYY-MM-DD HH:mm:ss')}</Text>
-
+                <Text>{this.state.uploadUri}</Text>
 
                 {/*<InputComponent ref={'test'}/>*/}
                 {/*<AppExample/>*/}

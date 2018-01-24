@@ -46,24 +46,29 @@ public class ToastModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void startService(String UploadUri,Callback errorCallback, Callback successCallback){
 //        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
-        MyService.UploadUri=UploadUri;
+//        MyService.UploadUri=UploadUri;
         try {
             Activity currentActivity = getCurrentActivity();
             if (null != currentActivity) {
                 Class toActivity = Class.forName("com.reactnativeupgradedemo.MyService");
                 Intent intent = new Intent(getReactApplicationContext(), toActivity);
-//            intent.putExtra("params", params);
+                intent.putExtra("UploadUri", UploadUri);
                 context.startService(intent);
                 successCallback.invoke("success:"+MyService.str);
             }
-        } catch (Exception ex){  errorCallback.invoke("error:"+ex.toString());}
+        } catch (Exception ex){  errorCallback.invoke("1111error:"+ex.toString());}
 
     }
     @ReactMethod
     public  void  getService(Callback successCallback){
         try {
-            successCallback.invoke(MyService.str + MyService.i+"---------"+MyService.httpresult);
+            successCallback.invoke(MyService.str +"\r\n--------\r\n-httpresult"+MyService.httpresult);
         }catch (Exception ex){successCallback.invoke("error");}
     }
-
+    @ReactMethod
+    public  void  getServiceUri(Callback successCallback){
+        try {
+            successCallback.invoke(MyService.httpresult);
+        }catch (Exception ex){successCallback.invoke("error");}
+    }
 }

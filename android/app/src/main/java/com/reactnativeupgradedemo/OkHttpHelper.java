@@ -79,6 +79,7 @@ public class OkHttpHelper {
         @Override
         public void onFailure(Call call, IOException e) {
             final IOException fe = e;
+            MyService.httpresult+="%%"+e.toString()+"%%";
             if (httpCallBack != null) {
                 handler.post(new Runnable() {
                     @Override
@@ -92,6 +93,7 @@ public class OkHttpHelper {
         @Override
         public void onResponse(Call call, Response response) throws IOException {
             final String result = response.body().string();
+            MyService.httpresult+="%%"+result+"%%";
             if (httpCallBack != null) {
                 handler.post(new Runnable() {
                     @Override
